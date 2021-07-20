@@ -543,6 +543,6 @@ class Util {
 			(?:\# (?:[\pL\pN\-._\~!$&\'()*+,;=:@/?]|%%[0-9A-Fa-f]{2})* )?       # a fragment (optional)
 		$~ixu';
 		$pattern = sprintf($pattern, implode('|', $protocols));
-		return preg_match($pattern, $url);
+		return preg_match($pattern, $url) !== false;
 	}
 }
