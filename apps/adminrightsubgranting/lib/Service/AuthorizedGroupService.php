@@ -27,8 +27,8 @@ namespace OCA\AdminRightSubgranting\Service;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 
-use OCA\AdminRightSubgranting\Db\AuthorizedGroup;
-use OCA\AdminRightSubgranting\Db\AuthorizedGroupMapper;
+use OC\Settings\AuthorizedGroup;
+use OC\Settings\AuthorizedGroupMapper;
 use OCP\DB\Exception;
 
 class AuthorizedGroupService {
