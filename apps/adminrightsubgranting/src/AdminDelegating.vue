@@ -8,16 +8,13 @@
 		<div class="setting-list">
 			<div v-for="setting in availableSettings" :key="setting.class">
 				<h3>{{ setting.sectionName }}</h3>
-				<GroupSelect :groups=availableGroups :setting="setting"></GroupSelect>
+				<GroupSelect :groups="availableGroups" :initial-state="authorizedGroups" :setting="setting"></GroupSelect>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-// import axios from '@nextcloud/axios'
-// import { generateUrl, generateOcsUrl } from '@nextcloud/router'
-
 import GroupSelect from './components/GroupSelect'
 
 export default {
@@ -37,7 +34,7 @@ export default {
 		authorizedGroups: {
 			type: Array,
 			required: true,
-		}
+		},
 	},
 	computed: {},
 	methods: {},
