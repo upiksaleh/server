@@ -5,6 +5,7 @@ const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-m
 const path = require('path')
 
 const accessibility = require('./apps/accessibility/webpack')
+const adminrightsubgranting = require('./apps/adminrightsubgranting/webpack')
 const comments = require('./apps/comments/webpack')
 const core = require('./core/webpack')
 const dashboard = require('./apps/dashboard/webpack')
@@ -24,6 +25,7 @@ const workflowengine = require('./apps/workflowengine/webpack')
 
 const modules = {
 	accessibility,
+	adminrightsubgranting,
 	comments,
 	core,
 	dashboard,

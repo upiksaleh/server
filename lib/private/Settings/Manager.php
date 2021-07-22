@@ -28,6 +28,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OC\Settings;
 
 use Closure;
@@ -59,16 +60,21 @@ class Manager implements IManager {
 	/** @var IServerContainer */
 	private $container;
 
+	/** @var AuthorizedGroupMapper $mapper */
+	private $mapper;
+
 	public function __construct(
 		ILogger $log,
 		IFactory $l10nFactory,
 		IURLGenerator $url,
-		IServerContainer $container
+		IServerContainer $container,
+		AuthorizedGroupMapper $mapper,
 	) {
 		$this->log = $log;
 		$this->l10nFactory = $l10nFactory;
 		$this->url = $url;
 		$this->container = $container;
+		$this->mapper = $mapper;
 	}
 
 	/** @var array */
@@ -135,14 +141,21 @@ class Manager implements IManager {
 	/** @var array */
 	protected $settings = [];
 
+	/** @var array $delegationAllowedClasses */
+	private $delegationAllowedClasses = [];
+
 	/**
-	 * @param string $type 'admin' or 'personal'
+	 * @psam-param 'admin'|'personal' $type The type of the setting.
 	 * @param string $setting Class must implement OCP\Settings\ISetting
+	 * @param bool $allowedDelegation
 	 *
 	 * @return void
 	 */
-	public function registerSetting(string $type, string $setting) {
+	public function registerSetting(string $type, string $setting, bool $allowedDelegation = false) {
 		$this->settingClasses[$setting] = $type;
+		if ($allowedDelegation && $type === 'admin') {
+			$this->delegationAllowedClasses[] = $setting;
+		}
 	}
 
 	/**
@@ -167,7 +180,7 @@ class Manager implements IManager {
 
 			try {
 				/** @var ISettings $setting */
-				$setting = $this->container->query($class);
+				$setting = $this->container->get($class);
 			} catch (QueryException $e) {
 				$this->log->logException($e, ['level' => ILogger::INFO]);
 				continue;
@@ -306,5 +319,9 @@ class Manager implements IManager {
 
 		ksort($settings);
 		return $settings;
+	}
+
+	public function getAdminDelegationAllowedSettings(): array {
+		return $this->delegationAllowedClasses;
 	}
 }

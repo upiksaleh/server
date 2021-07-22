@@ -1410,6 +1410,8 @@ class ComposerStaticInit53792487c5a8370acc0b06b1a864ff4c
         'OC\\Session\\Internal' => __DIR__ . '/../../..' . '/lib/private/Session/Internal.php',
         'OC\\Session\\Memory' => __DIR__ . '/../../..' . '/lib/private/Session/Memory.php',
         'OC\\Session\\Session' => __DIR__ . '/../../..' . '/lib/private/Session/Session.php',
+        'OC\\Settings\\AuthorizedGroup' => __DIR__ . '/../../..' . '/lib/private/Settings/AuthorizedGroup.php',
+        'OC\\Settings\\AuthorizedGroupMapper' => __DIR__ . '/../../..' . '/lib/private/Settings/AuthorizedGroupMapper.php',
         'OC\\Settings\\Manager' => __DIR__ . '/../../..' . '/lib/private/Settings/Manager.php',
         'OC\\Settings\\Section' => __DIR__ . '/../../..' . '/lib/private/Settings/Section.php',
         'OC\\Setup' => __DIR__ . '/../../..' . '/lib/private/Setup.php',

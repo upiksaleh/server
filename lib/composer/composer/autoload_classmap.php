@@ -1381,6 +1381,8 @@ return array(
     'OC\\Session\\Internal' => $baseDir . '/lib/private/Session/Internal.php',
     'OC\\Session\\Memory' => $baseDir . '/lib/private/Session/Memory.php',
     'OC\\Session\\Session' => $baseDir . '/lib/private/Session/Session.php',
+    'OC\\Settings\\AuthorizedGroup' => $baseDir . '/lib/private/Settings/AuthorizedGroup.php',
+    'OC\\Settings\\AuthorizedGroupMapper' => $baseDir . '/lib/private/Settings/AuthorizedGroupMapper.php',
     'OC\\Settings\\Manager' => $baseDir . '/lib/private/Settings/Manager.php',
     'OC\\Settings\\Section' => $baseDir . '/lib/private/Settings/Section.php',
     'OC\\Setup' => $baseDir . '/lib/private/Setup.php',
