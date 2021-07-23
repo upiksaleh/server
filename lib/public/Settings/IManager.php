@@ -27,6 +27,7 @@
 namespace OCP\Settings;
 
 use OCP\Activity\ISetting;
+use OCP\IUser;
 
 /**
  * @since 9.1
@@ -90,8 +91,18 @@ interface IManager {
 	 * @param bool $subAdminOnly only return settings sub admins are supposed to see (since 17.0.0)
 	 * @return array array of ISetting[] where key is the priority
 	 * @since 9.1.0
+	 * @depreacted Use IManager::getAuthorizedAdminSettings instead
 	 */
 	public function getAdminSettings($section, bool $subAdminOnly = false): array;
+
+	/**
+	 * Returns a list of admin settings that the current user is able to access.
+	 *
+	 * @param $section
+	 * @return array
+	 * @since 23.0.0
+	 */
+	public function getAuthorizedAdminSettings($section, IUser $user): array;
 
 	/**
 	 * returns a list of the personal  settings
