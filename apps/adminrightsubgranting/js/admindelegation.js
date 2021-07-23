@@ -8722,8 +8722,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-// import axios from '@nextcloud/axios'
-// import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AdminDelegating',
@@ -8794,39 +8792,30 @@ __webpack_require__.r(__webpack_exports__);
     setting: {
       type: Object,
       required: true
+    },
+    initialState: {
+      type: Array,
+      required: true
     }
   },
 
   data() {
-    const defaultGroups = [];
-    /* if (this.required && this.groups.length === 1) {
-    	defaultGroups.push(this.groups[0])
-    	this.$emit('input', defaultGroups.map(group => group.gid))
-    } */
+    const selected = [];
+
+    for (const initialGroup of this.initialState) {
+      if (initialGroup.class === this.setting.class) {
+        const group = this.groups.find(group => group.gid === initialGroup.group_id);
+        selected.push(group);
+      }
+    }
 
     return {
-      selected: defaultGroups
+      selected
     };
   },
 
   watch: {
-    selected(newSelected, oldSelected) {
-      if (newSelected === oldSelected) {
-        return;
-      }
-
-      const removedGroups = [];
-      oldSelected.forEach(group => {
-        if (!newSelected.includes(group)) {
-          removedGroups.push(group);
-        }
-      });
-      const newGroups = [];
-      newSelected.forEach(group => {
-        if (!oldSelected.includes(group)) {
-          newGroups.push(group);
-        }
-      });
+    selected() {
       this.saveGroups();
     }
 
@@ -8836,9 +8825,7 @@ __webpack_require__.r(__webpack_exports__);
       const data = {
         groups: this.selected,
         class: this.setting.class
-      }; // eslint-disable-next-line no-console
-
-      console.log(data);
+      };
       await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('/apps/adminrightsubgranting/') + 'authorizedgroups/saveSettings', data);
     },
 
@@ -33697,7 +33684,11 @@ var render = function() {
               _c("h3", [_vm._v(_vm._s(setting.sectionName))]),
               _vm._v(" "),
               _c("GroupSelect", {
-                attrs: { groups: _vm.availableGroups, setting: setting }
+                attrs: {
+                  groups: _vm.availableGroups,
+                  "initial-state": _vm.authorizedGroups,
+                  setting: setting
+                }
               })
             ],
             1

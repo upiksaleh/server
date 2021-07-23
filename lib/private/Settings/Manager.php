@@ -33,19 +33,23 @@ namespace OC\Settings;
 
 use Closure;
 use OCP\AppFramework\QueryException;
+use OCP\Group\ISubAdmin;
+use OCP\IGroupManager;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IServerContainer;
 use OCP\IURLGenerator;
+use OCP\IUser;
 use OCP\L10N\IFactory;
 use OCP\Settings\IIconSection;
 use OCP\Settings\IManager;
 use OCP\Settings\ISettings;
 use OCP\Settings\ISubAdminSettings;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Log\LoggerInterface;
 
 class Manager implements IManager {
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $log;
 
 	/** @var IL10N */
@@ -63,18 +67,28 @@ class Manager implements IManager {
 	/** @var AuthorizedGroupMapper $mapper */
 	private $mapper;
 
+	/** @var IGroupManager $groupManager */
+	private $groupManager;
+
+	/** @var ISubAdmin $subAdmin */
+	private $subAdmin;
+
 	public function __construct(
-		ILogger $log,
+		LoggerInterface $log,
 		IFactory $l10nFactory,
 		IURLGenerator $url,
 		IServerContainer $container,
 		AuthorizedGroupMapper $mapper,
+		IGroupManager $groupManager,
+		ISubAdmin $subAdmin,
 	) {
 		$this->log = $log;
 		$this->l10nFactory = $l10nFactory;
 		$this->url = $url;
 		$this->container = $container;
 		$this->mapper = $mapper;
+		$this->groupManager = $groupManager;
+		$this->subAdmin = $subAdmin;
 	}
 
 	/** @var array */
@@ -116,14 +130,14 @@ class Manager implements IManager {
 				/** @var IIconSection $section */
 				$section = \OC::$server->query($class);
 			} catch (QueryException $e) {
-				$this->log->logException($e, ['level' => ILogger::INFO]);
+				$this->log->info('', ['exception' => $e]);
 				continue;
 			}
 
 			$sectionID = $section->getID();
 
 			if ($sectionID !== 'connected-accounts' && isset($this->sections[$type][$sectionID])) {
-				$this->log->logException(new \InvalidArgumentException('Section with the same ID already registered: ' . $sectionID . ', class: ' . $class), ['level' => ILogger::INFO]);
+				$this->log->info('', ['exception' => new \InvalidArgumentException('Section with the same ID already registered: ' . $sectionID . ', class: ' . $class)]);
 				continue;
 			}
 
@@ -181,13 +195,13 @@ class Manager implements IManager {
 			try {
 				/** @var ISettings $setting */
 				$setting = $this->container->get($class);
-			} catch (QueryException $e) {
-				$this->log->logException($e, ['level' => ILogger::INFO]);
+			} catch (ContainerExceptionInterface $e) {
+				$this->log->info('', ['exception' => $e]);
 				continue;
 			}
 
 			if (!$setting instanceof ISettings) {
-				$this->log->logException(new \InvalidArgumentException('Invalid settings setting registered (' . $class . ')'), ['level' => ILogger::INFO]);
+				$this->log->info('', ['exception' => new \InvalidArgumentException('Invalid settings setting registered (' . $class . ')')]);
 				continue;
 			}
 
@@ -323,5 +337,61 @@ class Manager implements IManager {
 
 	public function getAdminDelegationAllowedSettings(): array {
 		return $this->delegationAllowedClasses;
+	}
+
+	public function getAuthorizedAdminSettings($section, IUser $user): array {
+		$isAdmin = $this->groupManager->isAdmin($user->getUID());
+		$isSubAdmin = $this->subAdmin->isSubAdmin($user);
+		$subAdminOnly = !$isAdmin && $isSubAdmin;
+
+		$appSettings = [];
+		if ($subAdminOnly) {
+			$subAdminSettingsFilter = function (ISettings $settings) {
+				return $settings instanceof ISubAdminSettings;
+			};
+			$appSettings = $this->getSettings('admin', $section, $subAdminSettingsFilter);
+		} else if ($isAdmin) {
+			// not an admin => look if the user is still authorized to access some
+			// settings
+			$appSettings = $this->getSettings('admin', $section);
+		} else {
+			$groups = $this->groupManager->getUserGroups($user);
+			$authorizedGroupFilter = function (ISettings $settings) {
+				return $settings;
+			}
+			$appSettings = $this->getSettings('admin', $section);
+		}
+
+		$settings = [];
+		foreach ($appSettings as $setting) {
+			if (!isset($settings[$setting->getPriority()])) {
+				$settings[$setting->getPriority()] = [];
+			}
+			$settings[$setting->getPriority()][] = $setting;
+		}
+
+		ksort($settings);
+		return $settings;
+		}
+
+		if ($subAdminOnly) {
+			$subAdminSettingsFilter = function (ISettings $settings) {
+				return $settings instanceof ISubAdminSettings;
+			};
+			$appSettings = $this->getSettings('admin', $section, $subAdminSettingsFilter);
+		} else {
+			$appSettings = $this->getSettings('admin', $section);
+		}
+
+		$settings = [];
+		foreach ($appSettings as $setting) {
+			if (!isset($settings[$setting->getPriority()])) {
+				$settings[$setting->getPriority()] = [];
+			}
+			$settings[$setting->getPriority()][] = $setting;
+		}
+
+		ksort($settings);
+		return $settings;
 	}
 }
