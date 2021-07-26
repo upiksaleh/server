@@ -71,7 +71,7 @@ trait CommonSettingsTrait {
 		//if ($isAdmin || $isSubAdmin) {
 			$templateParameters['admin'] = $this->formatAdminSections(
 				$currentType,
-				$currentSection,
+				$currentSection
 			);
 		//}
 
@@ -86,7 +86,7 @@ trait CommonSettingsTrait {
 		foreach ($sections as $prioritizedSections) {
 			foreach ($prioritizedSections as $section) {
 				if ($type === 'admin') {
-					$settings = $this->settingsManager->getAuthorizedAdminSettings($section->getID(), $this->userSession->getUser());
+					$settings = $this->settingsManager->getAllowedAdminSettings($section->getID(), $this->userSession->getUser());
 				} elseif ($type === 'personal') {
 					$settings = $this->settingsManager->getPersonalSettings($section->getID());
 				}
@@ -132,7 +132,7 @@ trait CommonSettingsTrait {
 		$html = '';
 		foreach ($settings as $prioritizedSettings) {
 			foreach ($prioritizedSettings as $setting) {
-				/** @var \OCP\Settings\ISettings $setting */
+				/** @var ISettings $setting */
 				$form = $setting->getForm();
 				$html .= $form->renderAs('')->render();
 			}

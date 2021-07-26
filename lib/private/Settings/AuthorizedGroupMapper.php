@@ -25,6 +25,7 @@ namespace OC\Settings;
 
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\IDBConnection;
 
 class AuthorizedGroupMapper extends QBMapper {
@@ -32,8 +33,24 @@ class AuthorizedGroupMapper extends QBMapper {
 		parent::__construct($db, 'authorizedgroups', AuthorizedGroup::class);
 	}
 
-	public function findAllClassesForUser(string $userId) {
-		// TODO
+	/**
+	 * @throws Exception
+	 */
+	public function findAllClassesForUser(string $userId): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$result = $qb->select('auth.class')
+			->from('authorizedgroups', 'auth')
+			->leftJoin('auth', 'group_user', 'g', $qb->expr()->eq('auth.group_id', 'g.gid'))
+			->where($qb->expr()->eq('g.uid', $qb->createNamedParameter($userId)))
+			->executeQuery();
+
+		$classes = [];
+		while ($row = $result->fetch()) {
+			$classes[] = $row['class'];
+		}
+		$result->closeCursor();
+		return $classes;
 	}
 
 	/**

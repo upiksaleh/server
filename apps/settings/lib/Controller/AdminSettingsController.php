@@ -75,10 +75,7 @@ class AdminSettingsController extends Controller {
 		/** @var IUser $user */
 		$user = $this->userSession->getUser();
 		$isSubAdmin = !$this->groupManager->isAdmin($user->getUID()) && $this->subAdmin->isSubAdmin($user);
-		$settings = $this->settingsManager->getAdminSettings(
-			$section,
-			$isSubAdmin
-		);
+		$settings = $this->settingsManager->getAllowedAdminSettings($section, $user);
 		$formatted = $this->formatSettings($settings);
 		// Do not show legacy forms for sub admins
 		if ($section === 'additional' && !$isSubAdmin) {

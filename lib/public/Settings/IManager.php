@@ -96,13 +96,12 @@ interface IManager {
 	public function getAdminSettings($section, bool $subAdminOnly = false): array;
 
 	/**
-	 * Returns a list of admin settings that the current user is able to access.
+	 * Returns a list of admin settings that the given user can use.
 	 *
-	 * @param $section
-	 * @return array
+	 * @return ISetting[] The array of admin settings there admin delegation is allowed.
 	 * @since 23.0.0
 	 */
-	public function getAuthorizedAdminSettings($section, IUser $user): array;
+	public function getAllowedAdminSettings(string $section, IUser $user): array;
 
 	/**
 	 * returns a list of the personal  settings
@@ -112,12 +111,4 @@ interface IManager {
 	 * @since 13.0.0
 	 */
 	public function getPersonalSettings($section): array;
-
-	/**
-	 * Returns a list of admin settings there admin delegation is allowed.
-	 *
-	 * @return array<class-string<ISetting>> The array of admin settings there admin delegation is allowed.
-	 * @since 23.0.0
-	 */
-	public function getAdminDelegationAllowedSettings(): array;
 }

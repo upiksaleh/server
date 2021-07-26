@@ -80,7 +80,7 @@ class Manager implements IManager {
 		IServerContainer $container,
 		AuthorizedGroupMapper $mapper,
 		IGroupManager $groupManager,
-		ISubAdmin $subAdmin,
+		ISubAdmin $subAdmin
 	) {
 		$this->log = $log;
 		$this->l10nFactory = $l10nFactory;
@@ -339,48 +339,26 @@ class Manager implements IManager {
 		return $this->delegationAllowedClasses;
 	}
 
-	public function getAuthorizedAdminSettings($section, IUser $user): array {
+	public function getAllowedAdminSettings(string $section, IUser $user): array {
 		$isAdmin = $this->groupManager->isAdmin($user->getUID());
 		$isSubAdmin = $this->subAdmin->isSubAdmin($user);
 		$subAdminOnly = !$isAdmin && $isSubAdmin;
 
-		$appSettings = [];
 		if ($subAdminOnly) {
+			// not an admin => look if the user is still authorized to access some
+			// settings
 			$subAdminSettingsFilter = function (ISettings $settings) {
 				return $settings instanceof ISubAdminSettings;
 			};
 			$appSettings = $this->getSettings('admin', $section, $subAdminSettingsFilter);
 		} else if ($isAdmin) {
-			// not an admin => look if the user is still authorized to access some
-			// settings
 			$appSettings = $this->getSettings('admin', $section);
 		} else {
-			$groups = $this->groupManager->getUserGroups($user);
-			$authorizedGroupFilter = function (ISettings $settings) {
-				return $settings;
-			}
-			$appSettings = $this->getSettings('admin', $section);
-		}
-
-		$settings = [];
-		foreach ($appSettings as $setting) {
-			if (!isset($settings[$setting->getPriority()])) {
-				$settings[$setting->getPriority()] = [];
-			}
-			$settings[$setting->getPriority()][] = $setting;
-		}
-
-		ksort($settings);
-		return $settings;
-		}
-
-		if ($subAdminOnly) {
-			$subAdminSettingsFilter = function (ISettings $settings) {
-				return $settings instanceof ISubAdminSettings;
+			$authorizedSettingsClasses = $this->mapper->findAllClassesForUser($user->getUID());
+			$authorizedGroupFilter = function (ISettings $settings) use ($authorizedSettingsClasses){
+				return in_array(get_class($settings), $authorizedSettingsClasses);
 			};
-			$appSettings = $this->getSettings('admin', $section, $subAdminSettingsFilter);
-		} else {
-			$appSettings = $this->getSettings('admin', $section);
+			$appSettings = $this->getSettings('admin', $section, $authorizedGroupFilter);
 		}
 
 		$settings = [];
