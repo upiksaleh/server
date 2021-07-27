@@ -36,6 +36,7 @@ declare(strict_types=1);
  */
 namespace OC\AppFramework\Middleware\Security;
 
+use _HumbugBox243b3a4ed02c\Nette\Neon\Exception;
 use OC\AppFramework\Middleware\Security\Exceptions\AppNotEnabledException;
 use OC\AppFramework\Middleware\Security\Exceptions\CrossSiteRequestForgeryException;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
@@ -43,6 +44,8 @@ use OC\AppFramework\Middleware\Security\Exceptions\NotLoggedInException;
 use OC\AppFramework\Middleware\Security\Exceptions\SecurityException;
 use OC\AppFramework\Middleware\Security\Exceptions\StrictCookieMissingException;
 use OC\AppFramework\Utility\ControllerMethodReflector;
+use OC\Log;
+use OC\Settings\AuthorizedGroupMapper;
 use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
@@ -56,8 +59,12 @@ use OCP\IL10N;
 use OCP\INavigationManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUser;
+use OCP\IUserSession;
 use OCP\Util;
 use Psr\Log\LoggerInterface;
+
+use function Assert\that;
 
 /**
  * Used to do all the authentication and checking stuff for a controller method
@@ -88,6 +95,8 @@ class SecurityMiddleware extends Middleware {
 	private $appManager;
 	/** @var IL10N */
 	private $l10n;
+	/** @var AuthorizedGroupMapper */
+	private $groupAuthorizationMapper;
 
 	public function __construct(IRequest $request,
 								ControllerMethodReflector $reflector,
@@ -99,7 +108,8 @@ class SecurityMiddleware extends Middleware {
 								bool $isAdminUser,
 								bool $isSubAdmin,
 								IAppManager $appManager,
-								IL10N $l10n
+								IL10N $l10n,
+								AuthorizedGroupMapper $mapper
 	) {
 		$this->navigationManager = $navigationManager;
 		$this->request = $request;
@@ -112,6 +122,7 @@ class SecurityMiddleware extends Middleware {
 		$this->isSubAdmin = $isSubAdmin;
 		$this->appManager = $appManager;
 		$this->l10n = $l10n;
+		$this->groupAuthorizationMapper = $mapper;
 	}
 
 	/**
@@ -140,15 +151,36 @@ class SecurityMiddleware extends Middleware {
 			if (!$this->isLoggedIn) {
 				throw new NotLoggedInException();
 			}
+			$authorized = false;
+            if ($this->reflector->hasAnnotation('AuthorizedAdminSetting')) {
+				$authorized = $this->isAdminUser;
 
+                if (!$authorized && $this->reflector->hasAnnotation('SubAdminRequired')) {
+                    $authorized = $this->isSubAdmin;
+                }
+
+                if (!$authorized) {
+					$settingClasses = explode(';', $this->reflector->getAnnotationParameter('AuthorizedAdminSetting', 'settings'));
+                	$authorizedClasses = $this->groupAuthorizationMapper->findAllClassesForUser(\OC::$server->get(IUserSession::class)->getSession()->get('user_id'));
+					foreach ($settingClasses as $settingClass) {
+                		$authorized = in_array($settingClass, $authorizedClasses, true);
+
+                		if ($authorized) {
+                			break;
+						}
+					}
+				}
+			}
 			if ($this->reflector->hasAnnotation('SubAdminRequired')
 				&& !$this->isSubAdmin
-				&& !$this->isAdminUser) {
+				&& !$this->isAdminUser
+				&& !$authorized) {
 				throw new NotAdminException($this->l10n->t('Logged in user must be an admin or sub admin'));
 			}
 			if (!$this->reflector->hasAnnotation('SubAdminRequired')
 				&& !$this->reflector->hasAnnotation('NoAdminRequired')
-				&& !$this->isAdminUser) {
+				&& !$this->isAdminUser
+				&& !$authorized) {
 				throw new NotAdminException($this->l10n->t('Logged in user must be an admin'));
 			}
 		}
@@ -195,6 +227,7 @@ class SecurityMiddleware extends Middleware {
 		if ($appPath !== false && !$isPublicPage && !$this->appManager->isEnabledForUser($this->appName)) {
 			throw new AppNotEnabledException();
 		}
+		\OC::$server->get(LoggerInterface::class)->critical($authorized ? "true" : "false");
 	}
 
 	/**
@@ -208,6 +241,7 @@ class SecurityMiddleware extends Middleware {
 	 * @return Response a Response object or null in case that the exception could not be handled
 	 */
 	public function afterException($controller, $methodName, \Exception $exception): Response {
+		\OC::$server->get(LoggerInterface::class)->critical('', ['exception' => $exception]);
 		if ($exception instanceof SecurityException) {
 			if ($exception instanceof StrictCookieMissingException) {
 				return new RedirectResponse(\OC::$WEBROOT . '/');

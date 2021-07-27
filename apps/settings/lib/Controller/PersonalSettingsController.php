@@ -33,6 +33,8 @@ use OCP\INavigationManager;
 use OCP\IRequest;
 use OCP\IUserSession;
 use OCP\Settings\IManager as ISettingsManager;
+use OCP\Settings\ISettings;
+use OCP\Settings\ISubAdminSettings;
 use OCP\Template;
 
 class PersonalSettingsController extends Controller {
@@ -56,14 +58,11 @@ class PersonalSettingsController extends Controller {
 	}
 
 	/**
-	 * @param string $section
-	 * @return TemplateResponse
-	 *
 	 * @NoCSRFRequired
 	 * @NoAdminRequired
 	 * @NoSubAdminRequired
 	 */
-	public function index($section) {
+	public function index(string $section): TemplateResponse {
 		return $this->getIndexResponse('personal', $section);
 	}
 

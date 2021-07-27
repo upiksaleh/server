@@ -25,6 +25,7 @@
  */
 namespace OCA\Settings\Controller;
 
+use OCA\AdminRightSubgranting\Settings\AdminSettings;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Group\ISubAdmin;
@@ -61,9 +62,33 @@ class AdminSettingsController extends Controller {
 	 * @return TemplateResponse
 	 *
 	 * @NoCSRFRequired
-	 * @SubAdminRequired
+	 * @NoSubAdminRequired
+	 * @AuthorizedAdminSetting(settings=OCA\AdminRightSubgranting\Settings\AdminSettings;OCA\AdminRightSubgranting\Settings\AdminSettings)
 	 */
-	public function index($section) {
+	public function index(string $section): TemplateResponse {
+		/*
+		$authorized = $this->
+		if ()
+			$isAdmin = $this->groupManager->isAdmin($user->getUID());
+		$isSubAdmin = $this->subAdmin->isSubAdmin($user);
+		$subAdminOnly = !$isAdmin && $isSubAdmin;
+
+		if ($subAdminOnly) {
+			// not an admin => look if the user is still authorized to access some
+			// settings
+			$subAdminSettingsFilter = function (ISettings $settings) {
+				return $settings instanceof ISubAdminSettings;
+			};
+			$appSettings = $this->getSettings('admin', $section, $subAdminSettingsFilter);
+		} else if ($isAdmin) {
+			$appSettings = $this->getSettings('admin', $section);
+		} else {
+			$authorizedSettingsClasses = $this->mapper->findAllClassesForUser($user->getUID());
+			$authorizedGroupFilter = function (ISettings $settings) use ($authorizedSettingsClasses){
+				return in_array(get_class($settings), $authorizedSettingsClasses);
+			};
+			$appSettings = $this->getSettings('admin', $section, $authorizedGroupFilter);
+		}*/
 		return $this->getIndexResponse('admin', $section);
 	}
 
