@@ -25,6 +25,7 @@
  */
 namespace OCA\Settings\Controller;
 
+use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 use OCA\AdminRightSubgranting\Settings\AdminSettings;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -63,32 +64,9 @@ class AdminSettingsController extends Controller {
 	 *
 	 * @NoCSRFRequired
 	 * @NoSubAdminRequired
-	 * @AuthorizedAdminSetting(settings=OCA\AdminRightSubgranting\Settings\AdminSettings;OCA\AdminRightSubgranting\Settings\AdminSettings)
+	 * @AuthorizedAdminSetting(settings=OCA\AdminRightSubgranting\Settings\AdminSettings)
 	 */
 	public function index(string $section): TemplateResponse {
-		/*
-		$authorized = $this->
-		if ()
-			$isAdmin = $this->groupManager->isAdmin($user->getUID());
-		$isSubAdmin = $this->subAdmin->isSubAdmin($user);
-		$subAdminOnly = !$isAdmin && $isSubAdmin;
-
-		if ($subAdminOnly) {
-			// not an admin => look if the user is still authorized to access some
-			// settings
-			$subAdminSettingsFilter = function (ISettings $settings) {
-				return $settings instanceof ISubAdminSettings;
-			};
-			$appSettings = $this->getSettings('admin', $section, $subAdminSettingsFilter);
-		} else if ($isAdmin) {
-			$appSettings = $this->getSettings('admin', $section);
-		} else {
-			$authorizedSettingsClasses = $this->mapper->findAllClassesForUser($user->getUID());
-			$authorizedGroupFilter = function (ISettings $settings) use ($authorizedSettingsClasses){
-				return in_array(get_class($settings), $authorizedSettingsClasses);
-			};
-			$appSettings = $this->getSettings('admin', $section, $authorizedGroupFilter);
-		}*/
 		return $this->getIndexResponse('admin', $section);
 	}
 
@@ -101,6 +79,9 @@ class AdminSettingsController extends Controller {
 		$user = $this->userSession->getUser();
 		$isSubAdmin = !$this->groupManager->isAdmin($user->getUID()) && $this->subAdmin->isSubAdmin($user);
 		$settings = $this->settingsManager->getAllowedAdminSettings($section, $user);
+		if (empty($settings)) {
+			throw new NotAdminException("Logged in user doesn't have permission to access these settings.");
+		}
 		$formatted = $this->formatSettings($settings);
 		// Do not show legacy forms for sub admins
 		if ($section === 'additional' && !$isSubAdmin) {

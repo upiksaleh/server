@@ -28,6 +28,7 @@ class AuthorizedGroupController extends Controller {
 	 * @return DataResponse
 	 * @throws NotFoundException
 	 * @throws Exception
+	 * @AuthorizedAdminSetting(settings=OCA\AdminRightSubgranting\Settings\AdminSettings)
 	 */
 	public function saveSettings(array $groups, string $class): DataResponse {
 		$oldGroups = $this->service->findOldGroups($class);
