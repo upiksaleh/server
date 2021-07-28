@@ -85,15 +85,13 @@ class AuthorizedGroupService {
 	/**
 	 * @throws NotFoundException
 	 */
-	public function delete(int $id): ?AuthorizedGroup {
+	public function delete(int $id): void {
 		try {
 			$authorizedGroup = $this->mapper->find($id);
 			$this->mapper->delete($authorizedGroup);
-			return $authorizedGroup;
 		} catch (\Exception $e) {
 			$this->handleException($e);
 		}
-		return null;
 	}
 
 	public function findOldGroups(string $class): ?array {

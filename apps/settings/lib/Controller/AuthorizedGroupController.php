@@ -34,14 +34,11 @@ use OCP\AppFramework\Controller;
 class AuthorizedGroupController extends Controller {
 	use Errors;
 
-	private $userId;
-
 	/** @var AuthorizedGroupService $service */
 	private $service;
 
-	public function __construct($AppName, IRequest $request, $UserId, AuthorizedGroupService $service) {
+	public function __construct($AppName, IRequest $request, AuthorizedGroupService $service) {
 		parent::__construct($AppName, $request);
-		$this->userId = $UserId;
 		$this->service = $service;
 	}
 
