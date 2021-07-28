@@ -354,7 +354,7 @@ class Manager implements IManager {
 		} else if ($isAdmin) {
 			$appSettings = $this->getSettings('admin', $section);
 		} else {
-			$authorizedSettingsClasses = $this->mapper->findAllClassesForUser($user->getUID());
+			$authorizedSettingsClasses = $this->mapper->findAllClassesForUser($user);
 			$authorizedGroupFilter = function (ISettings $settings) use ($authorizedSettingsClasses){
 				return in_array(get_class($settings), $authorizedSettingsClasses);
 			};

@@ -49,9 +49,6 @@ class Delegation implements ISettings {
 	/** @var AuthorizedGroupService  */
 	private $service;
 
-	/**
-	 * Admin constructor.
-	 */
 	public function __construct(
 		IManager $settingManager,
 		IInitialState $initialStateService,
@@ -94,6 +91,9 @@ class Delegation implements ISettings {
 		$groups = [];
 		$groupsClass = $this->groupManager->search('');
 		foreach ($groupsClass as $group) {
+			if ($group->getGID() === 'admin') {
+				continue; // Admin already have access to everything
+			}
 			$groups[] = [
 				'displayName' => $group->getDisplayName(),
 				'gid' => $group->getGID(),

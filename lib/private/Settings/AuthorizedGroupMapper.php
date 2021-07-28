@@ -27,6 +27,8 @@ use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\Exception;
 use OCP\IDBConnection;
+use OCP\IGroupManager;
+use OCP\IUser;
 
 class AuthorizedGroupMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
@@ -36,13 +38,19 @@ class AuthorizedGroupMapper extends QBMapper {
 	/**
 	 * @throws Exception
 	 */
-	public function findAllClassesForUser(string $userId): array {
+	public function findAllClassesForUser(IUser $user): array {
 		$qb = $this->db->getQueryBuilder();
 
+		/** @var IGroupManager $groupManager */
+		$groupManager = \OC::$server->get(IGroupManager::class);
+		$groups = $groupManager->getUserGroups($user);
+		$conditions = [];
+		foreach ($groups as $group) {
+			$conditions[] = $qb->expr()->eq('auth.group_id', $qb->createNamedParameter($group->getGID()));
+		}
 		$result = $qb->select('auth.class')
 			->from('authorizedgroups', 'auth')
-			->leftJoin('auth', 'group_user', 'g', $qb->expr()->eq('auth.group_id', 'g.gid'))
-			->where($qb->expr()->eq('g.uid', $qb->createNamedParameter($userId)))
+			->where($qb->expr()->orX(...$conditions))
 			->executeQuery();
 
 		$classes = [];
@@ -101,5 +109,15 @@ class AuthorizedGroupMapper extends QBMapper {
 				$queryBuilder->expr()->eq('class', $class)
 			);
 		return $this->findEntities($queryBuilder);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function removeGroup(string $gid) {
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where($qb->expr()->eq('group_id', $gid))
+			->executeStatement();
 	}
 }

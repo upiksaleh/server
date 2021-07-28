@@ -30,6 +30,7 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OC\Settings\AuthorizedGroup;
 use OC\Settings\AuthorizedGroupMapper;
 use OCP\DB\Exception;
+use OCP\IGroup;
 
 class AuthorizedGroupService {
 
@@ -95,7 +96,7 @@ class AuthorizedGroupService {
 		return null;
 	}
 
-	public function findOldGroups(string $class) {
+	public function findOldGroups(string $class): ?array {
 		try {
 			$authorizedGroup = $this->mapper->findOldGroups($class);
 			return $authorizedGroup;
@@ -103,5 +104,13 @@ class AuthorizedGroupService {
 			$this->handleException($e);
 		}
 		return null;
+	}
+
+	public function removeAuthorizationAssociatedTo(IGroup $group): void {
+		try {
+			$this->mapper->removeGroup($group->getGID());
+		} catch (\Exception $e) {
+			$this->handleException($e);
+		}
 	}
 }

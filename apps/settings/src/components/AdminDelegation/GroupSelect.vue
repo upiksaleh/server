@@ -40,7 +40,9 @@ export default {
 		for (const initialGroup of this.initialState) {
 			if (initialGroup.class === this.setting.class) {
 				const group = this.groups.find((group) => group.gid === initialGroup.group_id)
-				selected.push(group)
+				if (group) {
+					selected.push(group)
+				}
 			}
 		}
 		return {

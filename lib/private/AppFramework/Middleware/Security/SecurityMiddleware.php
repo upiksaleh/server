@@ -158,7 +158,7 @@ class SecurityMiddleware extends Middleware {
 
 				if (!$authorized) {
 					$settingClasses = explode(';', $this->reflector->getAnnotationParameter('AuthorizedAdminSetting', 'settings'));
-					$authorizedClasses = $this->groupAuthorizationMapper->findAllClassesForUser(\OC::$server->get(IUserSession::class)->getSession()->get('user_id'));
+					$authorizedClasses = $this->groupAuthorizationMapper->findAllClassesForUser(\OC::$server->get(IUserSession::class)->getUser());
 					foreach ($settingClasses as $settingClass) {
 						$authorized = in_array($settingClass, $authorizedClasses, true);
 
