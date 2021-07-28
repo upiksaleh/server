@@ -69,7 +69,7 @@ trait CommonSettingsTrait {
 		//$isAdmin = $this->groupManager->isAdmin($user->getUID());
 		//$isSubAdmin = $this->subAdmin->isSubAdmin($user);
 		//if ($isAdmin || $isSubAdmin) {
-			$templateParameters['admin'] = $this->formatAdminSections(
+		$templateParameters['admin'] = $this->formatAdminSections(
 				$currentType,
 				$currentSection
 			);

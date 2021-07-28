@@ -23,7 +23,6 @@
 
 namespace OCA\Settings\Sections\Admin;
 
-use OCA\Settings\AppInfo\Application;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;

@@ -27,14 +27,12 @@ use OCA\Settings\AppInfo\Application;
 use OCA\Settings\Service\AuthorizedGroupService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
-use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\Settings\IIconSection;
 use OCP\Settings\IManager;
 use OCP\Settings\ISettings;
 
 class Delegation implements ISettings {
-
 	protected $appName;
 
 	/** @var IManager */

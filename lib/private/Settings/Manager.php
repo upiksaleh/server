@@ -351,11 +351,11 @@ class Manager implements IManager {
 				return $settings instanceof ISubAdminSettings;
 			};
 			$appSettings = $this->getSettings('admin', $section, $subAdminSettingsFilter);
-		} else if ($isAdmin) {
+		} elseif ($isAdmin) {
 			$appSettings = $this->getSettings('admin', $section);
 		} else {
 			$authorizedSettingsClasses = $this->mapper->findAllClassesForUser($user);
-			$authorizedGroupFilter = function (ISettings $settings) use ($authorizedSettingsClasses){
+			$authorizedGroupFilter = function (ISettings $settings) use ($authorizedSettingsClasses) {
 				return in_array(get_class($settings), $authorizedSettingsClasses);
 			};
 			$appSettings = $this->getSettings('admin', $section, $authorizedGroupFilter);

@@ -24,7 +24,6 @@
 namespace OCA\Settings\Controller;
 
 use OC\Settings\AuthorizedGroup;
-use OCA\Settings\Controller\Errors;
 use OCA\Settings\Service\AuthorizedGroupService;
 use OCA\Settings\Service\NotFoundException;
 use OCP\DB\Exception;
@@ -40,7 +39,7 @@ class AuthorizedGroupController extends Controller {
 	/** @var AuthorizedGroupService $service */
 	private $service;
 
-	public function __construct($AppName, IRequest $request, $UserId, AuthorizedGroupService $service){
+	public function __construct($AppName, IRequest $request, $UserId, AuthorizedGroupService $service) {
 		parent::__construct($AppName, $request);
 		$this->userId = $UserId;
 		$this->service = $service;

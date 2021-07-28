@@ -33,8 +33,6 @@ use OCP\INavigationManager;
 use OCP\IRequest;
 use OCP\IUserSession;
 use OCP\Settings\IManager as ISettingsManager;
-use OCP\Settings\ISettings;
-use OCP\Settings\ISubAdminSettings;
 use OCP\Template;
 
 class PersonalSettingsController extends Controller {

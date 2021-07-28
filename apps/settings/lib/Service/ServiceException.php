@@ -24,5 +24,4 @@
 namespace OCA\Settings\Service;
 
 class ServiceException extends \Exception {
-
 }

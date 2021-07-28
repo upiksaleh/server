@@ -26,7 +26,6 @@
 namespace OCA\Settings\Controller;
 
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
-use OCA\AdminRightSubgranting\Settings\Delegation;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Group\ISubAdmin;
