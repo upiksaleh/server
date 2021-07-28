@@ -22,15 +22,15 @@
 
 import Vue from 'vue'
 import { loadState } from '@nextcloud/initial-state'
-import App from './AdminDelegating.vue'
+import App from './components/AdminDelegating.vue'
 
 // bind to window
 Vue.prototype.OC = OC
 Vue.prototype.t = t
 
-const availableSettings = loadState('adminrightsubgranting', 'available-settings')
-const availableGroups = loadState('adminrightsubgranting', 'available-groups')
-const authorizedGroups = loadState('adminrightsubgranting', 'authorized-groups')
+const availableSettings = loadState('settings', 'available-settings')
+const availableGroups = loadState('settings', 'available-groups')
+const authorizedGroups = loadState('settings', 'authorized-groups')
 
 const View = Vue.extend(App)
 const accessibility = new View({

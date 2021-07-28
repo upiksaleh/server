@@ -1,9 +1,32 @@
 <?php
-namespace OCA\AdminRightSubgranting\Controller;
 
-use OCA\AdminRightSubgranting\Db\AuthorizedGroup;
-use OCA\AdminRightSubgranting\Service\AuthorizedGroupService;
-use OCA\AdminRightSubgranting\Service\NotFoundException;
+/**
+ * @copyright Copyright (c) 2021 Nextcloud GmbH
+ *
+ * @author Carl Schwan <carl@carlschwan.eu>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+namespace OCA\Settings\Controller;
+
+use OC\Settings\AuthorizedGroup;
+use OCA\Settings\Controller\Errors;
+use OCA\Settings\Service\AuthorizedGroupService;
+use OCA\Settings\Service\NotFoundException;
 use OCP\DB\Exception;
 use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
@@ -24,8 +47,6 @@ class AuthorizedGroupController extends Controller {
 	}
 
 	/**
-	 * @param string $class
-	 * @return DataResponse
 	 * @throws NotFoundException
 	 * @throws Exception
 	 * @AuthorizedAdminSetting(settings=OCA\AdminRightSubgranting\Settings\AdminSettings)
@@ -47,7 +68,6 @@ class AuthorizedGroupController extends Controller {
 			}
 		}
 
-		var_dump($groups);
 		foreach ($groups as $groupData) {
 			$added = true;
 			foreach ($oldGroups as $group) {

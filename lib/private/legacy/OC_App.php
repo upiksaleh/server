@@ -226,9 +226,9 @@ class OC_App {
 			if (array_key_exists('@value', $info['settings']['admin'])) {
 				\OC::$server->get(ISettingsManager::class)->registerSetting('admin', $info['settings']['admin']['@value'], filter_var($info['settings']['admin']['@attributes']['allow-delegation'], FILTER_VALIDATE_BOOLEAN));
 			} else {
-				foreach ($info['settings']['admin'] as $key => $setting) {
+				foreach ($info['settings']['admin'] as $setting) {
 					if (is_array($setting)) {
-						\OC::$server->get(ISettingsManager::class)->registerSetting('admin', $setting['@value'], filter_var($setting['@attribute']['allow-delegation'], FILTER_VALIDATE_BOOLEAN));
+						\OC::$server->get(ISettingsManager::class)->registerSetting('admin', $setting['@value'], filter_var($setting['@attributes']['allow-delegation'], FILTER_VALIDATE_BOOLEAN));
 					} else {
 						\OC::$server->get(ISettingsManager::class)->registerSetting('admin', $setting);
 					}

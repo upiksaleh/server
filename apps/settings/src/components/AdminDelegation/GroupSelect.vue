@@ -2,7 +2,7 @@
 	<Multiselect
 		v-model="selected"
 		class="group-multiselect"
-		:placeholder="t('adminrightsubgranting', 'None')"
+		:placeholder="t('settings', 'None')"
 		track-by="gid"
 		label="displayName"
 		:options="groups"
@@ -58,33 +58,9 @@ export default {
 				groups: this.selected,
 				class: this.setting.class,
 			}
-			await axios.post(generateUrl('/apps/adminrightsubgranting/') + 'authorizedgroups/saveSettings', data)
+			await axios.post(generateUrl('/apps/settings/') + '/settings/authorizedgroups/saveSettings', data)
 		},
-		async saveGroups2(newGroups, removedGroups) {
-			for (const group of newGroups) {
-				try {
-					await axios.post(generateUrl('/apps/adminrightsubgranting/') + 'authorizedgroups', {
-						groupId: group.gid,
-						class: this.setting.class,
-					})
-				} catch (error) {
-					// this.error = true
-					// console.error('Error fetching guests list', error)
-				}
-			}
-			for (const group of removedGroups) {
-				try {
-					await axios.delete(generateUrl('/apps/adminrightsubgranting/') + 'authorizedgroups', {
-						groupId: group.gid,
-						class: this.setting.class,
-					})
-				} catch (error) {
-					// this.error = true
-					// console.error('Error fetching guests list', error)
-				}
-			}
-		},
-	},
+	}
 }
 </script>
 

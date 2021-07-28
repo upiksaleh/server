@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright Copyright (c) 2021 Nextcloud GmbH
  *
@@ -20,28 +18,11 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\AdminRightSubgranting\AppInfo;
+namespace OCA\Settings\Service;
 
-use OCA\CloudFederationAPI\Capabilities;
-use OCP\AppFramework\App;
-use OCP\AppFramework\Bootstrap\IBootContext;
-use OCP\AppFramework\Bootstrap\IBootstrap;
-use OCP\AppFramework\Bootstrap\IRegistrationContext;
+class ServiceException extends \Exception {
 
-class Application extends App implements IBootstrap {
-	public const APP_ID = 'adminrightsubgranting';
-
-	public function __construct() {
-		parent::__construct(self::APP_ID);
-	}
-
-	public function register(IRegistrationContext $context): void {
-		$context->registerCapability(Capabilities::class);
-	}
-
-	public function boot(IBootContext $context): void {
-	}
 }

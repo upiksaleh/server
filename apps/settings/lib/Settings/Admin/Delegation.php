@@ -21,10 +21,10 @@
  *
  */
 
-namespace OCA\AdminRightSubgranting\Settings;
+namespace OCA\Settings\Settings\Admin;
 
-use OCA\AdminRightSubgranting\AppInfo\Application;
-use OCA\AdminRightSubgranting\Service\AuthorizedGroupService;
+use OCA\Settings\AppInfo\Application;
+use OCA\Settings\Service\AuthorizedGroupService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
@@ -33,12 +33,9 @@ use OCP\Settings\IIconSection;
 use OCP\Settings\IManager;
 use OCP\Settings\ISettings;
 
-class AdminSettings implements ISettings {
+class Delegation implements ISettings {
 
 	protected $appName;
-
-	/** @var IConfig */
-	private $config;
 
 	/** @var IManager */
 	private $settingManager;
@@ -49,33 +46,25 @@ class AdminSettings implements ISettings {
 	/** @var IGroupManager $groupManager */
 	private $groupManager;
 
-	/** @var AuthorizedGroupService $service */
+	/** @var AuthorizedGroupService  */
 	private $service;
 
 	/**
 	 * Admin constructor.
-	 *
-	 * @param IConfig $config
-	 * @param IManager $settingManager
 	 */
 	public function __construct(
-		IConfig $config,
 		IManager $settingManager,
 		IInitialState $initialStateService,
 		IGroupManager $groupManager,
 		AuthorizedGroupService $service
 	) {
 		$this->appName = Application::APP_ID;
-		$this->config = $config;
 		$this->settingManager = $settingManager;
 		$this->initialStateService = $initialStateService;
 		$this->groupManager = $groupManager;
 		$this->service = $service;
 	}
 
-	/**
-	 * @return TemplateResponse
-	 */
 	public function getForm(): TemplateResponse {
 		$settingsClasses = $this->settingManager->getAdminDelegationAllowedSettings();
 
@@ -115,30 +104,16 @@ class AdminSettings implements ISettings {
 		// Already set authorized groups
 		$this->initialStateService->provideInitialState('authorized-groups', $this->service->findAll());
 
-		return new TemplateResponse(Application::APP_ID, 'settings/index', [], 'blank');
+		return new TemplateResponse(Application::APP_ID, 'settings/admin/delegation', [], '');
 	}
 
 	/**
 	 * @return string the section ID, e.g. 'sharing'
 	 */
 	public function getSection() {
-		return 'adminrightsubgranting';
+		return 'admindelegation';
 	}
 
-	/**
-	 * @return int whether the form should be rather on the top or bottom of
-	 * the admin section. The forms are arranged in ascending order of the
-	 * priority values. It is re
-	/**
-	 * @param string $section
-	 * @return array
-	 */
-	protected function getSettings($section) {
-		/** @var IUser $user */
-		$settings = $this->settingsManager->getAdminDelegationAllowedSettings();
-		$formatted = $this->formatSettings($settings);
-		return $formatted;
-	}
 	/*
 	 * @inheritdoc
 	 */

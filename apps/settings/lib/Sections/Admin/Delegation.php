@@ -20,14 +20,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\AdminRightSubgranting\Settings;
 
-use OCA\AdminRightSubgranting\AppInfo\Application;
+namespace OCA\Settings\Sections\Admin;
+
+use OCA\Settings\AppInfo\Application;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
 
-class Section implements IIconSection {
+class Delegation implements IIconSection {
 	/** @var IL10N */
 	private $l;
 	/** @var IURLGenerator */
@@ -46,7 +47,7 @@ class Section implements IIconSection {
 	 * {@inheritdoc}
 	 */
 	public function getID() {
-		return 'adminrightsubgranting';
+		return 'admindelegation';
 	}
 
 	/**
@@ -67,6 +68,6 @@ class Section implements IIconSection {
 	 * {@inheritdoc}
 	 */
 	public function getIcon() {
-		return $this->url->imagePath(Application::APP_ID, 'app.svg');
+		return $this->url->imagePath('core', 'places/contacts.svg');
 	}
 }

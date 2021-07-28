@@ -1,8 +1,9 @@
 <?php
 
 
-namespace OCA\AdminRightSubgranting\Controller;
-use OCA\AdminRightSubgranting\Service\NotFoundException;
+namespace OCA\Settings\Controller;
+
+use OCA\Settings\Service\NotFoundException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 
