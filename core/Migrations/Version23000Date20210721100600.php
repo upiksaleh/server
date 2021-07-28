@@ -58,9 +58,6 @@ class Version23000Date20210721100600 extends SimpleMigrationStep {
 
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['group_id'], 'admindel_groupid_idx');
-
-			$groupTable = $schema->getTable('oc_groups');
-			$table->addForeignKeyConstraint($groupTable, array("group_id"), array("gid"), array("onUpdate" => "CASCADE"));
 		}
 		return $schema;
 	}

@@ -59,12 +59,11 @@ class AdminSettingsController extends Controller {
 	}
 
 	/**
-	 * @param string $section
-	 * @return TemplateResponse
-	 *
 	 * @NoCSRFRequired
+	 * @NoAdminRequired
 	 * @NoSubAdminRequired
-	 * @AuthorizedAdminSetting(settings=OCA\AdminRightSubgranting\Settings\AdminSettings)
+	 * We are checking the permissions in the getSettings method. If there is no allowed
+	 * settings for the given section. The user will be gretted by an error message.
 	 */
 	public function index(string $section): TemplateResponse {
 		return $this->getIndexResponse('admin', $section);

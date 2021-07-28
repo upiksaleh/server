@@ -1,7 +1,7 @@
 <template>
 	<div id="adminrightsubgranting" class="section">
 		<h2>{{ t('settings', 'Admin Right Management') }}</h2>
-		<p>
+		<p class="settings-hint">
 			{{ t('settings', 'Here you can decide which group can access some of the admin settings.') }}
 		</p>
 
