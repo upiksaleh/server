@@ -48,7 +48,6 @@ use OC\AppFramework\Utility\SimpleContainer;
 use OC\Core\Middleware\TwoFactorMiddleware;
 use OC\Log\PsrLoggerAdapter;
 use OC\ServerContainer;
-use OC\Settings\AuthorizedGroup;
 use OC\Settings\AuthorizedGroupMapper;
 use OCA\WorkflowEngine\Manager;
 use OCP\AppFramework\Http\IOutput;

@@ -11,6 +11,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author sualko <klaus@jsxc.org>
+ * @author Carl Schwan <carl@carlschwan.eu>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -128,8 +129,8 @@ class Manager implements IManager {
 		foreach (array_unique($this->sectionClasses[$type]) as $index => $class) {
 			try {
 				/** @var IIconSection $section */
-				$section = \OC::$server->query($class);
-			} catch (QueryException $e) {
+				$section = \OC::$server->get($class);
+			} catch (ContainerExceptionInterface $e) {
 				$this->log->info('', ['exception' => $e]);
 				continue;
 			}

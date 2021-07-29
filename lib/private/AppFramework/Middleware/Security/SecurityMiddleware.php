@@ -149,7 +149,7 @@ class SecurityMiddleware extends Middleware {
 				throw new NotLoggedInException();
 			}
 			$authorized = false;
-			if ($this->reflector->hasAnnotation('AllowDeletegatedAdminAccess')) {
+			if ($this->reflector->hasAnnotation('AuthorizedAdminSetting')) {
 				$authorized = $this->isAdminUser;
 
 				if (!$authorized && $this->reflector->hasAnnotation('SubAdminRequired')) {
@@ -157,7 +157,7 @@ class SecurityMiddleware extends Middleware {
 				}
 
 				if (!$authorized) {
-					$settingClasses = explode(';', $this->reflector->getAnnotationParameter('AllowDeletegatedAdminAccess', 'settings'));
+					$settingClasses = explode(';', $this->reflector->getAnnotationParameter('AuthorizedAdminSetting', 'settings'));
 					$authorizedClasses = $this->groupAuthorizationMapper->findAllClassesForUser(\OC::$server->get(IUserSession::class)->getUser());
 					foreach ($settingClasses as $settingClass) {
 						$authorized = in_array($settingClass, $authorizedClasses, true);

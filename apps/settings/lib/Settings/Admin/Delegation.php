@@ -28,6 +28,8 @@ use OCA\Settings\Service\AuthorizedGroupService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IGroupManager;
+use OCP\IL10N;
+use OCP\Settings\IDelegatedSettings;
 use OCP\Settings\IIconSection;
 use OCP\Settings\IManager;
 use OCP\Settings\ISettings;
@@ -44,20 +46,22 @@ class Delegation implements ISettings {
 	/** @var IGroupManager $groupManager */
 	private $groupManager;
 
-	/** @var AuthorizedGroupService  */
+	/** @var AuthorizedGroupService $service */
 	private $service;
 
 	public function __construct(
 		IManager $settingManager,
 		IInitialState $initialStateService,
 		IGroupManager $groupManager,
-		AuthorizedGroupService $service
+		AuthorizedGroupService $service,
+		IL10n $l
 	) {
 		$this->appName = Application::APP_ID;
 		$this->settingManager = $settingManager;
 		$this->initialStateService = $initialStateService;
 		$this->groupManager = $groupManager;
 		$this->service = $service;
+		$this->l = $l;
 	}
 
 	public function getForm(): TemplateResponse {
@@ -67,7 +71,8 @@ class Delegation implements ISettings {
 		$sections = $this->settingManager->getAdminSections();
 		$settings = [];
 		foreach ($settingsClasses as $settingClass) {
-			$settingSection = \OC::$server->get($settingClass)->getSection();
+			$setting = \OC::$server->get($settingClass);
+			$settingSection = $setting->getSection();
 			$sectionName = $settingSection;
 			foreach ($sections as $sectionPriority) {
 				foreach ($sectionPriority as $section) {
@@ -77,6 +82,9 @@ class Delegation implements ISettings {
 					}
 					break; // break the two foreach loop
 				}
+			}
+			if (($setting instanceof IDelegatedSettings) && $setting->getName()) {
+				$sectionName .= ' - ' . $setting->getName();
 			}
 			$settings[] = [
 				'class' => $settingClass,

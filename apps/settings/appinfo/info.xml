@@ -19,10 +19,10 @@
 
 	<settings>
 		<admin allow-delegation="true">OCA\Settings\Settings\Admin\Delegation</admin>
-		<admin>OCA\Settings\Settings\Admin\Mail</admin>
-		<admin>OCA\Settings\Settings\Admin\Overview</admin>
+		<admin allow-delegation="true">OCA\Settings\Settings\Admin\Mail</admin>
+		<admin allow-delegation="true">OCA\Settings\Settings\Admin\Overview</admin>
 		<admin>OCA\Settings\Settings\Admin\Security</admin>
-		<admin>OCA\Settings\Settings\Admin\Server</admin>
+		<admin allow-delegation="true">OCA\Settings\Settings\Admin\Server</admin>
 		<admin>OCA\Settings\Settings\Admin\Sharing</admin>
 		<admin-section>OCA\Settings\Sections\Admin\Additional</admin-section>
 		<admin-section>OCA\Settings\Sections\Admin\Delegation</admin-section>
