@@ -32,7 +32,7 @@
 			:is-multi-value-supported="true"
 			:is-valid-form="isValidForm"
 			:scope.sync="primaryEmail.scope"
-			@addAdditional="onAddAdditionalEmail" />
+			@add-additional="onAddAdditionalEmail" />
 
 		<template v-if="displayNameChangeSupported">
 			<Email
@@ -46,7 +46,7 @@
 				:scope.sync="additionalEmail.scope"
 				:email.sync="additionalEmail.value"
 				@update:email="onUpdateEmail"
-				@deleteAdditionalEmail="onDeleteAdditionalEmail(index)" />
+				@delete-additional-email="onDeleteAdditionalEmail(index)" />
 		</template>
 
 		<span v-else>

@@ -95,7 +95,7 @@ export default {
 
 	methods: {
 		onAddAdditional() {
-			this.$emit('addAdditional')
+			this.$emit('add-additional')
 		},
 
 		onScopeChange(scope) {

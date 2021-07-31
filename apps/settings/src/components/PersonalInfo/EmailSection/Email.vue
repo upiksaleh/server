@@ -237,7 +237,7 @@ export default {
 
 		handleDeleteAdditionalEmail(status) {
 			if (status === 'ok') {
-				this.$emit('deleteAdditionalEmail')
+				this.$emit('delete-additional-email')
 			} else {
 				this.handleResponse('error', 'Unable to delete additional email address', {})
 			}

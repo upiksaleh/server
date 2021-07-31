@@ -73,7 +73,7 @@ export default {
 
 	methods: {
 		onDisplayNameChange(e) {
-			this.$emit('update:displayName', e.target.value.trim())
+			this.$emit('update:display-name', e.target.value.trim())
 			// $nextTick() ensures that references to this.dipslayName further down the chain give the correct non-outdated value
 			this.$nextTick(() => this.debounceDisplayNameChange())
 		},

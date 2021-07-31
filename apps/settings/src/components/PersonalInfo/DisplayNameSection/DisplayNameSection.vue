@@ -36,7 +36,7 @@
 			<DisplayName
 				:scope.sync="primaryDisplayName.scope"
 				:display-name.sync="primaryDisplayName.value"
-				@update:displayName="onUpdateDisplayName" />
+				@update:display-name="onUpdateDisplayName" />
 		</template>
 
 		<span v-else>
