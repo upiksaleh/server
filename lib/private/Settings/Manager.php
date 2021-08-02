@@ -33,7 +33,6 @@
 namespace OC\Settings;
 
 use Closure;
-use OCP\AppFramework\QueryException;
 use OCP\Group\ISubAdmin;
 use OCP\IGroupManager;
 use OCP\IL10N;
@@ -371,6 +370,20 @@ class Manager implements IManager {
 		}
 
 		ksort($settings);
+		return $settings;
+	}
+
+	public function getAllAllowedAdminSettings(IUser $user): array {
+		$this->getSettings('admin', ''); // Make sure all the settings are loaded
+		$settings = [];
+		$authorizedSettingsClasses = $this->mapper->findAllClassesForUser($user);
+		foreach ($this->settings['admin'] as $section) {
+			foreach ($section as $setting) {
+				if (in_array(get_class($setting), $authorizedSettingsClasses)) {
+					$settings[] = $setting;
+				}
+			}
+		}
 		return $settings;
 	}
 }

@@ -33,4 +33,20 @@ interface IDelegatedSettings extends ISettings {
 	 * null if only the section name should be displayed.
 	 */
 	public function getName(): ?string;
+
+	/**
+	 * Get a list of authorized app config that this setting is allowed to modify.
+	 * The format of the array is the following:
+	 * ```php
+	 * <?php
+	 * [
+	 * 		'app_name' => [
+	 * 			'/simple_key/', # value
+	 * 			'/s[a-z]*ldap/', # regex
+	 * 		],
+	 * 		'another_app_name => [ ... ],
+	 * ]
+	 * ```
+	 */
+	public function getAuthorizedAppConfig(): array;
 }

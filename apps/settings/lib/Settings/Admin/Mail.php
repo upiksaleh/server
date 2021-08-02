@@ -99,4 +99,8 @@ class Mail implements IDelegatedSettings {
 	public function getName(): ?string {
 		return $this->l->t('Email server');
 	}
+
+	public function getAuthorizedAppConfig(): array {
+		return [];
+	}
 }

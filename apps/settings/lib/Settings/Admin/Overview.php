@@ -74,4 +74,8 @@ class Overview implements IDelegatedSettings {
 	public function getName(): ?string {
 		return $this->l->t('Security & setup warnings');
 	}
+
+	public function getAuthorizedAppConfig(): array {
+		return [];
+	}
 }

@@ -109,4 +109,8 @@ class Server implements IDelegatedSettings {
 	public function getName(): ?string {
 		return $this->l->t('Background jobs');
 	}
+
+	public function getAuthorizedAppConfig(): array {
+		return [];
+	}
 }
