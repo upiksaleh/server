@@ -35,12 +35,9 @@ use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IRequest;
-use OCP\IUser;
 use OCP\IUserSession;
 use OCP\Settings\IDelegatedSettings;
 use OCP\Settings\IManager;
-use OCP\Settings\ISettings;
-use Psr\Log\LoggerInterface;
 
 class AppConfigController extends OCSController {
 
@@ -145,9 +142,7 @@ class AppConfigController extends OCSController {
 				if (!array_key_exists($app, $allowedKeys)) {
 					continue;
 				}
-				\OC::$server->get(LoggerInterface::class)->critical(var_export($allowedKeys, true));
 				foreach ($allowedKeys[$app] as $regex) {
-					\OC::$server->get(LoggerInterface::class)->critical($regex . $key . preg_match($regex, $key));
 					if (preg_match($regex, $key) === 1) {
 						$allowed = true;
 						break 2;

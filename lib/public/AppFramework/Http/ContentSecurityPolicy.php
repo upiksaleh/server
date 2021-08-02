@@ -41,9 +41,9 @@ namespace OCP\AppFramework\Http;
  */
 class ContentSecurityPolicy extends EmptyContentSecurityPolicy {
 	/** @var bool Whether inline JS snippets are allowed */
-	protected $inlineScriptAllowed = true;
+	protected $inlineScriptAllowed = false;
 	/** @var bool Whether eval in JS scripts is allowed */
-	protected $evalScriptAllowed = true;
+	protected $evalScriptAllowed = false;
 	/** @var array Domains from which scripts can get loaded */
 	protected $allowedScriptDomains = [
 		'\'self\'',
