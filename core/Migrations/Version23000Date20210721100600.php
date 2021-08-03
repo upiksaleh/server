@@ -22,7 +22,7 @@
  *
  */
 
-namespace OCA\AdminRightSubgranting\Migration;
+namespace OC\Core\Migrations;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
