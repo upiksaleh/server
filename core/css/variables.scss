@@ -45,6 +45,8 @@ $color-placeholder-dark: nc-darken($color-main-background, 20%) !default;
 
 $color-primary: #0082c9 !default;
 $color-primary-light: mix($color-primary, $color-main-background, 10%) !default;
+$color-primary-light-hover: mix($color-primary-light, $color-main-text, 20%) !default;
+
 $color-primary-text: #ffffff !default;
 // do not use nc-darken/lighten in case of overriding because
 // primary-text is independent of color-main-text
